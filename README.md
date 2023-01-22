@@ -3,6 +3,8 @@ ST7701S ESP系列驱动，基于ESP-IDF5.0，ESP32S3编写。
 
 本库只负责SPI的配置，SPI设置屏幕两方面。由于RGB库和图形库的配置无法解耦，具体使用的RGB库，图形库需要自行配置添加。
 
+SPI的指令，地址配置信息来源较多，其中有从Arduino_GFX库中移植。
+
 本库使用面向对象思想编程，支持多设备多实例，但不建议
 
 Github，Gitee同步更新，Gitee仅作为下载仓库，提交Issue和Pull request请到Github
@@ -39,4 +41,10 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 ## 3. 如何移植
 
 修改`ST7701S_spi_init()`函数即可，即只修改初始化部分，初始化SPI使其可以发送1 + 8 = 9 bit的数据方式
+
+## 4. 参考库
+
+[https://github.com/moononournation/Arduino_GFX](https://github.com/moononournation/Arduino_GFX)
+
+[https://www.bilibili.com/video/BV1hB4y197YN/](https://www.bilibili.com/video/BV1hB4y197YN/)
 
