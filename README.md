@@ -38,6 +38,10 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 
 直接将components中的Alfred_ST7701S放入自己的components中，后执行`idf.py reconfigure`重构CMake，主函数中调用函数即可
 
+### 3. menuconfig配置PSRAM
+
+配置如下![image-20230122223142648](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230122223142648.png)
+
 ## 3. 如何移植
 
 修改`ST7701S_spi_init()`函数即可，即只修改初始化部分，初始化SPI使其可以发送1 + 8 = 9 bit的数据方式
