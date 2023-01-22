@@ -5,6 +5,12 @@ ST7701S ESP系列驱动，基于ESP-IDF5.0，ESP32S3编写。
 
 本库使用面向对象思想编程，支持多设备多实例，但不建议
 
+Github，Gitee同步更新，Gitee仅作为下载仓库，提交Issue和Pull request请到Github
+
+[Github: https://github.com/taxue-alfred/ST7701SForESP](https://github.com/taxue-alfred/ST7701SForESP)
+
+[Gitee: https://gitee.com/TaXue_TianXing/ST7701SForESP](https://gitee.com/TaXue_TianXing/ST7701SForESP)
+
 ## 1. 目录结构
 
 ```
