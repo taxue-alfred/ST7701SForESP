@@ -1,7 +1,7 @@
 # ST7701SForESP
 ST7701S ESP系列驱动，基于ESP-IDF5.0，ESP32S3编写。
 
-本库只负责SPI的配置，SPI设置屏幕两方面。由于RGB库和图形库的配置无法解耦，具体使用的RGB库，图形库需要自行配置添加。
+本库只负责SPI的配置，SPI设置屏幕两方面。由于RGB库和图形库的配置无法解耦，具体使用的RGB库，图形库需要自行配置添加，**本示例默认绑定LVGL**
 
 SPI的指令，地址配置信息来源较多，其中有从Arduino_GFX库中移植。
 
@@ -18,6 +18,7 @@ Github，Gitee同步更新，Gitee仅作为下载仓库，提交Issue和Pull req
 ```
 - components
 	- Alfred_ST7701S 驱动文件
+	- lvgl LVGL库文件
 - main
 	- ST7701SForESP.c 示例文件
 ```
@@ -40,7 +41,8 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 
 ### 3. menuconfig配置PSRAM
 
-配置如下![image-20230122223142648](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230122223142648.png)
+配置如下
+![image-20230122223142648](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230122223142648.png)
 
 ## 3. 如何移植
 
