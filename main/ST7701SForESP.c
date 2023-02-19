@@ -14,32 +14,55 @@
 #define LCD_BK_LIGHT_OFF_LEVEL !LCD_BK_LIGHT_ON_LEVEL
 
 // SPI PIN Define
-#define SPI_SDA 47
-#define SPI_SCL 48
-#define SPI_CS  39
+#define SPI_SDA 20
+#define SPI_SCL 19
+#define SPI_CS  4
 
 // RGB Pin Define
-#define PIN_NUM_BK_LIGHT       38
-#define PIN_NUM_HSYNC          16
-#define PIN_NUM_VSYNC          17
-#define PIN_NUM_DE             18
-#define PIN_NUM_PCLK           21
-#define PIN_NUM_DATA0          4    // B0
-#define PIN_NUM_DATA1          5    // B1
-#define PIN_NUM_DATA2          6    // B2
-#define PIN_NUM_DATA3          7    // B3
-#define PIN_NUM_DATA4          15   // B4
-#define PIN_NUM_DATA5          8    // G0
-#define PIN_NUM_DATA6          20   // G1
-#define PIN_NUM_DATA7          3    // G2
-#define PIN_NUM_DATA8          46   // G3
-#define PIN_NUM_DATA9          9    // G4
-#define PIN_NUM_DATA10         10   // G5
-#define PIN_NUM_DATA11         11   // R0
-#define PIN_NUM_DATA12         12   // R1
-#define PIN_NUM_DATA13         13   // R2
-#define PIN_NUM_DATA14         14   // R3
-#define PIN_NUM_DATA15         0    // R4
+// #define PIN_NUM_BK_LIGHT       38
+// #define PIN_NUM_HSYNC          16
+// #define PIN_NUM_VSYNC          17
+// #define PIN_NUM_DE             18
+// #define PIN_NUM_PCLK           21
+// #define PIN_NUM_DATA0          4    // B0
+// #define PIN_NUM_DATA1          5    // B1
+// #define PIN_NUM_DATA2          6    // B2
+// #define PIN_NUM_DATA3          7    // B3
+// #define PIN_NUM_DATA4          15   // B4
+// #define PIN_NUM_DATA5          8    // G0
+// #define PIN_NUM_DATA6          20   // G1
+// #define PIN_NUM_DATA7          3    // G2
+// #define PIN_NUM_DATA8          46   // G3
+// #define PIN_NUM_DATA9          9    // G4
+// #define PIN_NUM_DATA10         10   // G5
+// #define PIN_NUM_DATA11         11   // R0
+// #define PIN_NUM_DATA12         12   // R1
+// #define PIN_NUM_DATA13         13   // R2
+// #define PIN_NUM_DATA14         14   // R3
+// #define PIN_NUM_DATA15         0    // R4
+
+// RGB Pin Define
+#define PIN_NUM_BK_LIGHT       -1
+#define PIN_NUM_HSYNC          46
+#define PIN_NUM_VSYNC          3
+#define PIN_NUM_DE             17
+#define PIN_NUM_PCLK           9
+#define PIN_NUM_DATA0          10    // B0
+#define PIN_NUM_DATA1          11   // B1
+#define PIN_NUM_DATA2          12    // B2
+#define PIN_NUM_DATA3          13    // B3
+#define PIN_NUM_DATA4          14   // B4
+#define PIN_NUM_DATA5          21    // G0
+#define PIN_NUM_DATA6          47   // G1
+#define PIN_NUM_DATA7          48    // G2
+#define PIN_NUM_DATA8          45   // G3
+#define PIN_NUM_DATA9          38    // G4
+#define PIN_NUM_DATA10         39   // G5
+#define PIN_NUM_DATA11         40   // R0
+#define PIN_NUM_DATA12         41   // R1
+#define PIN_NUM_DATA13         42   // R2
+#define PIN_NUM_DATA14         2   // R3
+#define PIN_NUM_DATA15         1    // R4
     
 #define PIN_NUM_DISP_EN        -1
 
@@ -167,13 +190,13 @@ void app_main(void)
             .h_res = LCD_H_RES,
             .v_res = LCD_V_RES,
             // The following parameters should refer to LCD spec
-            .hsync_back_porch = 40,
-            .hsync_front_porch = 20,
-            .hsync_pulse_width = 1,
-            .vsync_back_porch = 8,
-            .vsync_front_porch = 4,
-            .vsync_pulse_width = 1,
-            .flags.pclk_active_neg = true,
+            .hsync_back_porch = 50,
+            .hsync_front_porch = 10,
+            .hsync_pulse_width = 8,
+            .vsync_back_porch = 20,
+            .vsync_front_porch = 10,
+            .vsync_pulse_width = 8,
+            .flags.pclk_active_neg = false,
         },
         .flags.fb_in_psram = true, // allocate frame buffer in PSRAM
     };
@@ -187,7 +210,7 @@ void app_main(void)
     ESP_ERROR_CHECK(esp_lcd_panel_reset(panel_handle));
     ESP_ERROR_CHECK(esp_lcd_panel_init(panel_handle));
 
-
+#if PIN_NUM_BK_LIGHT > 0
     /**背光开启**/
     gpio_config_t bk_gpio_config = {
         .mode = GPIO_MODE_OUTPUT,
@@ -195,6 +218,7 @@ void app_main(void)
     };
     ESP_ERROR_CHECK(gpio_config(&bk_gpio_config));
     gpio_set_level(PIN_NUM_BK_LIGHT, LCD_BK_LIGHT_ON_LEVEL);
+#endif
     
 
     /**LVGL初始化，此项请在RGB初始化之后**/
@@ -212,7 +236,7 @@ void app_main(void)
 
 
     /**LVGL示例**/
-    lv_demo_benchmark();
+    lv_demo_music();
 
 
     while (1) {

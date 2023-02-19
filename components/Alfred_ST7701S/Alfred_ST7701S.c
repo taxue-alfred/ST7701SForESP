@@ -301,13 +301,13 @@ void ST7701S_screen_init(Alfred_ST7701S *alfredSt7701S, unsigned char type)
         SPI_WriteComm(0xE5);
         SPI_WriteData(0xE4);
 
-        // Delay(10);
+        Delay(10);
         SPI_WriteComm(0x29);
 
     }else if(type == 2){
         //从Arduino GFX库中移植
 
-        SPI_WriteComm(0x01); //reset command
+        SPI_WriteComm(0x11); //reset command
 
         SPI_WriteComm(0xFF);
         SPI_WriteData(0x77);
@@ -1079,6 +1079,8 @@ void ST7701S_screen_init(Alfred_ST7701S *alfredSt7701S, unsigned char type)
 
     }else if(type == 5){
         // 2.1寸圆屏厂商提供驱动
+        Delay(120);
+
         SPI_WriteComm(0xFF);
         SPI_WriteData(0x77);
         SPI_WriteData(0x01);
@@ -1087,7 +1089,7 @@ void ST7701S_screen_init(Alfred_ST7701S *alfredSt7701S, unsigned char type)
         SPI_WriteData(0x10);
 
         SPI_WriteComm(0xC0);
-        SPI_WriteData(0x3B);//Scan line	
+        SPI_WriteData(0x3B);//Scan line
         SPI_WriteData(0x00);
 
         SPI_WriteComm(0xC1);
@@ -1101,44 +1103,44 @@ void ST7701S_screen_init(Alfred_ST7701S *alfredSt7701S, unsigned char type)
         SPI_WriteComm(0xCC);
         SPI_WriteData(0x10);
 
-        //SPI_WriteComm(0xCD);//RGB format
-        //SPI_WriteData(0x08);        //用565时屏蔽    666打开
+//        SPI_WriteComm(0xCD);//RGB format
+//        SPI_WriteData(0x08);        //用565时屏蔽    666打开
 
-        SPI_WriteComm(0xB0); // IPS   
-        SPI_WriteData(0x00); // 255 
-        SPI_WriteData(0x11); // 251    
+        SPI_WriteComm(0xB0); // IPS
+        SPI_WriteData(0x00); // 255
+        SPI_WriteData(0x11); // 251
         SPI_WriteData(0x16); // 247  down
-        SPI_WriteData(0x0e); // 239    
-        SPI_WriteData(0x11); // 231    
-        SPI_WriteData(0x06); // 203    
-        SPI_WriteData(0x05); // 175 
-        SPI_WriteData(0x09); // 147    
-        SPI_WriteData(0x08); // 108    
-        SPI_WriteData(0x21); // 80  
-        SPI_WriteData(0x06); // 52   
-        SPI_WriteData(0x13); // 24    
-        SPI_WriteData(0x10); // 16    
+        SPI_WriteData(0x0e); // 239
+        SPI_WriteData(0x11); // 231
+        SPI_WriteData(0x06); // 203
+        SPI_WriteData(0x05); // 175
+        SPI_WriteData(0x09); // 147
+        SPI_WriteData(0x08); // 108
+        SPI_WriteData(0x21); // 80
+        SPI_WriteData(0x06); // 52
+        SPI_WriteData(0x13); // 24
+        SPI_WriteData(0x10); // 16
         SPI_WriteData(0x29); // 8    down
-        SPI_WriteData(0x31); // 4    
-        SPI_WriteData(0x18); // 0   
+        SPI_WriteData(0x31); // 4
+        SPI_WriteData(0x18); // 0
 
-        SPI_WriteComm(0xB1);//  IPS	   
-        SPI_WriteData(0x00);//  255 
+        SPI_WriteComm(0xB1);//  IPS
+        SPI_WriteData(0x00);//  255
         SPI_WriteData(0x11);//  251
         SPI_WriteData(0x16);//  247   down
         SPI_WriteData(0x0e);//  239
         SPI_WriteData(0x11);//  231
-        SPI_WriteData(0x07);//  203    
+        SPI_WriteData(0x07);//  203
         SPI_WriteData(0x05);//  175
-        SPI_WriteData(0x09);//  147  
-        SPI_WriteData(0x09);//  108  
-        SPI_WriteData(0x21);//  80 
-        SPI_WriteData(0x05);//  52   
-        SPI_WriteData(0x13);//  24 
-        SPI_WriteData(0x11);//  16 
-        SPI_WriteData(0x2a);//  8  down 
-        SPI_WriteData(0x31);//  4  
-        SPI_WriteData(0x18);//  0  
+        SPI_WriteData(0x09);//  147
+        SPI_WriteData(0x09);//  108
+        SPI_WriteData(0x21);//  80
+        SPI_WriteData(0x05);//  52
+        SPI_WriteData(0x13);//  24
+        SPI_WriteData(0x11);//  16
+        SPI_WriteData(0x2a);//  8  down
+        SPI_WriteData(0x31);//  4
+        SPI_WriteData(0x18);//  0
 
         SPI_WriteComm(0xFF);
         SPI_WriteData(0x77);
@@ -1149,17 +1151,17 @@ void ST7701S_screen_init(Alfred_ST7701S *alfredSt7701S, unsigned char type)
 
         SPI_WriteComm(0xB0);  //VOP  3.5375+ *x 0.0125
         SPI_WriteData(0x6d);  //5D
-        
-        SPI_WriteComm(0xB1); 	//VCOM amplitude setting  
+
+        SPI_WriteComm(0xB1); 	//VCOM amplitude setting
         SPI_WriteData(0x37);  //
-        
-        SPI_WriteComm(0xB2); 	//VGH Voltage setting  
+
+        SPI_WriteComm(0xB2); 	//VGH Voltage setting
         SPI_WriteData(0x81);	//12V
 
         SPI_WriteComm(0xB3);
         SPI_WriteData(0x80);
 
-        SPI_WriteComm(0xB5); 	//VGL Voltage setting  
+        SPI_WriteComm(0xB5); 	//VGL Voltage setting
         SPI_WriteData(0x43);	//-8.3V
 
         SPI_WriteComm(0xB7);
@@ -1183,31 +1185,31 @@ void ST7701S_screen_init(Alfred_ST7701S *alfredSt7701S, unsigned char type)
         SPI_WriteData(0x02);
 
         SPI_WriteComm(0xE1);
-        SPI_WriteData(0x03);	
+        SPI_WriteData(0x03);
         SPI_WriteData(0xA0);
-        SPI_WriteData(0x00);	
         SPI_WriteData(0x00);
-        SPI_WriteData(0x04);	
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x04);
         SPI_WriteData(0xA0);
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
         SPI_WriteData(0x00);
         SPI_WriteData(0x20);
         SPI_WriteData(0x20);
 
         SPI_WriteComm(0xE2);
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	  
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
         SPI_WriteData(0x00);
 
         SPI_WriteComm(0xE3);
@@ -1220,21 +1222,21 @@ void ST7701S_screen_init(Alfred_ST7701S *alfredSt7701S, unsigned char type)
         SPI_WriteData(0x22);
         SPI_WriteData(0x00);
 
-        SPI_WriteComm(0xE5);		
-        SPI_WriteData(0x05);	
-        SPI_WriteData(0xEC);	
+        SPI_WriteComm(0xE5);
+        SPI_WriteData(0x05);
+        SPI_WriteData(0xEC);
         SPI_WriteData(0xA0);
         SPI_WriteData(0xA0);
-        SPI_WriteData(0x07);	
-        SPI_WriteData(0xEE);	
+        SPI_WriteData(0x07);
+        SPI_WriteData(0xEE);
         SPI_WriteData(0xA0);
         SPI_WriteData(0xA0);
         SPI_WriteData(0x00);
-        SPI_WriteData(0x00);	
         SPI_WriteData(0x00);
         SPI_WriteData(0x00);
         SPI_WriteData(0x00);
-        SPI_WriteData(0x00);	
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
         SPI_WriteData(0x00);
         SPI_WriteData(0x00);
 
@@ -1248,57 +1250,57 @@ void ST7701S_screen_init(Alfred_ST7701S *alfredSt7701S, unsigned char type)
         SPI_WriteData(0x22);
         SPI_WriteData(0x00);
 
-        SPI_WriteComm(0xE8);		
-        SPI_WriteData(0x06);	
-        SPI_WriteData(0xED);	
+        SPI_WriteComm(0xE8);
+        SPI_WriteData(0x06);
+        SPI_WriteData(0xED);
         SPI_WriteData(0xA0);
         SPI_WriteData(0xA0);
-        SPI_WriteData(0x08);	
-        SPI_WriteData(0xEF);	
-        SPI_WriteData(0xA0); 
+        SPI_WriteData(0x08);
+        SPI_WriteData(0xEF);
         SPI_WriteData(0xA0);
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	
+        SPI_WriteData(0xA0);
         SPI_WriteData(0x00);
         SPI_WriteData(0x00);
-        SPI_WriteData(0x00);	
-        SPI_WriteData(0x00);	
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
+        SPI_WriteData(0x00);
         SPI_WriteData(0x00);
         SPI_WriteData(0x00);
 
         SPI_WriteComm(0xEB);
-        SPI_WriteData(0x00); 	
+        SPI_WriteData(0x00);
         SPI_WriteData(0x00);
         SPI_WriteData(0x40);
         SPI_WriteData(0x40);
         SPI_WriteData(0x00);
         SPI_WriteData(0x00);
-        SPI_WriteData(0x00);  
+        SPI_WriteData(0x00);
 
-        SPI_WriteComm(0xED);  
-        SPI_WriteData(0xFF); 
-        SPI_WriteData(0xFF);  
-        SPI_WriteData(0xFF); 	
-        SPI_WriteData(0xBA); 		
-        SPI_WriteData(0x0A); 	
-        SPI_WriteData(0xBF); 	
-        SPI_WriteData(0x45); 	
-        SPI_WriteData(0xFF); 
-        SPI_WriteData(0xFF);  
-        SPI_WriteData(0x54); 	
-        SPI_WriteData(0xFB); 	
-        SPI_WriteData(0xA0); 	
-        SPI_WriteData(0xAB); 	
-        SPI_WriteData(0xFF); 
-        SPI_WriteData(0xFF); 
-        SPI_WriteData(0xFF); 
+        SPI_WriteComm(0xED);
+        SPI_WriteData(0xFF);
+        SPI_WriteData(0xFF);
+        SPI_WriteData(0xFF);
+        SPI_WriteData(0xBA);
+        SPI_WriteData(0x0A);
+        SPI_WriteData(0xBF);
+        SPI_WriteData(0x45);
+        SPI_WriteData(0xFF);
+        SPI_WriteData(0xFF);
+        SPI_WriteData(0x54);
+        SPI_WriteData(0xFB);
+        SPI_WriteData(0xA0);
+        SPI_WriteData(0xAB);
+        SPI_WriteData(0xFF);
+        SPI_WriteData(0xFF);
+        SPI_WriteData(0xFF);
 
         SPI_WriteComm(0xEF);
-        SPI_WriteData(0x10); 
-        SPI_WriteData(0x0D); 
-        SPI_WriteData(0x04); 
-        SPI_WriteData(0x08); 
-        SPI_WriteData(0x3F); 
+        SPI_WriteData(0x10);
+        SPI_WriteData(0x0D);
+        SPI_WriteData(0x04);
+        SPI_WriteData(0x08);
+        SPI_WriteData(0x3F);
         SPI_WriteData(0x1F);
 
         SPI_WriteComm(0xFF);
