@@ -44,6 +44,14 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 配置如下
 ![image-20230122223142648](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230122223142648.png)
 
+**这一步特别重要，不然会出现屏幕疯狂滚动的现象**
+
+> 这里从CLion环境截图，menuconfig都一样
+
+开启 `Cache fetch instruction from SPI RAM`和`Cache load read only data from SPI RAM`
+
+![image-20230219180440612](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230219180440612.png)
+
 ## 3. 如何移植
 
 修改`ST7701S_spi_init()`函数即可，即只修改初始化部分，初始化SPI使其可以发送1 + 8 = 9 bit的数据方式
