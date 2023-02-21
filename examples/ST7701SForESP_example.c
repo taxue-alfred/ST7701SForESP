@@ -5,7 +5,7 @@
 #include "esp_timer.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_panel_rgb.h"
-#include "Alfred_ST7701S.h"
+#include "Vernon_ST7701S.h"
 #include "lvgl.h"
 #include "lv_demos.h"
 
@@ -85,7 +85,7 @@ static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) calle
 static lv_disp_drv_t disp_drv;      // contains callback functions
 
 // 创建ST7701S实例
-Alfred_ST7701S alfredSt7701S;
+Vernon_ST7701S VernonSt7701S;
 
 
 static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p)
@@ -151,8 +151,8 @@ void app_main(void)
 
 
     /**RGB面板SPI配置**/
-    ST7701S_spi_init(&alfredSt7701S, SPI_SDA, SPI_SCL, SPI_CS, SPI3_HOST);
-    ST7701S_screen_init(&alfredSt7701S, 2);
+    ST7701S_spi_init(&VernonSt7701S, SPI_SDA, SPI_SCL, SPI_CS, SPI3_HOST);
+    ST7701S_screen_init(&VernonSt7701S, 2);
 
 
     /**RGB面板初始化**/
@@ -236,7 +236,7 @@ void app_main(void)
 
 
     /**LVGL示例**/
-    lv_demo_music();
+    lv_demo_widgets();
 
 
     while (1) {

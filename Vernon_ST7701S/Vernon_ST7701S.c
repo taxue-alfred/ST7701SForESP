@@ -2,36 +2,36 @@
 // Created by taxue on 2023/1/21.
 //
 
-#include "Alfred_ST7701S.h"
+#include "Vernon_ST7701S.h"
 
-#define SPI_WriteComm(cmd) ST7701S_WriteCommand(alfredSt7701S, cmd)
-#define SPI_WriteData(data) ST7701S_WriteData(alfredSt7701S, data)
+#define SPI_WriteComm(cmd) ST7701S_WriteCommand(VernonSt7701S, cmd)
+#define SPI_WriteData(data) ST7701S_WriteData(VernonSt7701S, data)
 #define Delay(ms) vTaskDelay(ms / portTICK_PERIOD_MS)
 
 /**
  * @brief 三线SPI初始化
- * @param alfredSt7701S 类实例指针
+ * @param VernonSt7701S 类实例指针
  * @param SDA SDA引脚
  * @param SCL SCL引脚
  * @param CS  CS引脚
  * @param spi_select SPI控制器, SPI3_HOST OR SPI4_HOST in ESP32S3
 */
-void ST7701S_spi_init(Alfred_ST7701S *alfredSt7701S, int SDA, int SCL, int CS, char spi_select)
+void ST7701S_spi_init(Vernon_ST7701S *VernonSt7701S, int SDA, int SCL, int CS, char spi_select)
 {
-    alfredSt7701S->spi_io_config_t.miso_io_num = -1;
-    alfredSt7701S->spi_io_config_t.mosi_io_num = SDA;
-    alfredSt7701S->spi_io_config_t.sclk_io_num = SCL;
-    alfredSt7701S->spi_io_config_t.quadwp_io_num = -1;
-    alfredSt7701S->spi_io_config_t.quadhd_io_num = -1;
+    VernonSt7701S->spi_io_config_t.miso_io_num = -1;
+    VernonSt7701S->spi_io_config_t.mosi_io_num = SDA;
+    VernonSt7701S->spi_io_config_t.sclk_io_num = SCL;
+    VernonSt7701S->spi_io_config_t.quadwp_io_num = -1;
+    VernonSt7701S->spi_io_config_t.quadhd_io_num = -1;
     // 默认值，启用DMA应设置为0
-    alfredSt7701S->spi_io_config_t.max_transfer_sz = SOC_SPI_MAXIMUM_BUFFER_SIZE;
+    VernonSt7701S->spi_io_config_t.max_transfer_sz = SOC_SPI_MAXIMUM_BUFFER_SIZE;
     // 不使用DMA最后赋值0
-    ESP_ERROR_CHECK(spi_bus_initialize(spi_select, &alfredSt7701S->spi_io_config_t,
+    ESP_ERROR_CHECK(spi_bus_initialize(spi_select, &VernonSt7701S->spi_io_config_t,
                                        0));
 
-    alfredSt7701S->st7701s_protocol_config_t.command_bits = 1;
-    alfredSt7701S->st7701s_protocol_config_t.address_bits = 8;
-    alfredSt7701S->st7701s_protocol_config_t.clock_speed_hz = 40000000;
+    VernonSt7701S->st7701s_protocol_config_t.command_bits = 1;
+    VernonSt7701S->st7701s_protocol_config_t.address_bits = 8;
+    VernonSt7701S->st7701s_protocol_config_t.clock_speed_hz = 40000000;
     /**
      * < 时钟极性以及时钟相位设置(CPOL, CPHA):
          - 0: (0, 0)
@@ -39,20 +39,20 @@ void ST7701S_spi_init(Alfred_ST7701S *alfredSt7701S, int SDA, int SCL, int CS, c
          - 2: (1, 0)
          - 3: (1, 1)
          **/
-    alfredSt7701S->st7701s_protocol_config_t.mode = 0;
-    alfredSt7701S->st7701s_protocol_config_t.spics_io_num = CS;
-    alfredSt7701S->st7701s_protocol_config_t.queue_size = 1;
-    ESP_ERROR_CHECK(spi_bus_add_device(spi_select, &alfredSt7701S->st7701s_protocol_config_t,
-                                       &alfredSt7701S->spi_device));
+    VernonSt7701S->st7701s_protocol_config_t.mode = 0;
+    VernonSt7701S->st7701s_protocol_config_t.spics_io_num = CS;
+    VernonSt7701S->st7701s_protocol_config_t.queue_size = 1;
+    ESP_ERROR_CHECK(spi_bus_add_device(spi_select, &VernonSt7701S->st7701s_protocol_config_t,
+                                       &VernonSt7701S->spi_device));
 }
 
 /**
  * @brief 屏幕初始化
- * @param alfredSt7701S 类实例指针
+ * @param VernonSt7701S 类实例指针
  * @param type 选择初始化类型 [1-x]
  * @note 以下类型来自不同地方，对应命令功能未知
 */
-void ST7701S_screen_init(Alfred_ST7701S *alfredSt7701S, unsigned char type)
+void ST7701S_screen_init(Vernon_ST7701S *VernonSt7701S, unsigned char type)
 {
     if (type == 1){
         //从商家提供的资料复制
@@ -1078,7 +1078,7 @@ void ST7701S_screen_init(Alfred_ST7701S *alfredSt7701S, unsigned char type)
         SPI_WriteComm (0x29);
 
     }else if(type == 5){
-        // 2.1寸圆屏厂商提供驱动
+        // 2.1寸圆屏厂商提供驱动 - 华迪创显
         Delay(120);
 
         SPI_WriteComm(0xFF);
@@ -1103,8 +1103,8 @@ void ST7701S_screen_init(Alfred_ST7701S *alfredSt7701S, unsigned char type)
         SPI_WriteComm(0xCC);
         SPI_WriteData(0x10);
 
-//        SPI_WriteComm(0xCD);//RGB format
-//        SPI_WriteData(0x08);        //用565时屏蔽    666打开
+//SPI_WriteComm(0xCD);//RGB format
+//SPI_WriteData(0x08);        //用565时屏蔽    666打开
 
         SPI_WriteComm(0xB0); // IPS
         SPI_WriteData(0x00); // 255
@@ -1331,15 +1331,311 @@ void ST7701S_screen_init(Alfred_ST7701S *alfredSt7701S, unsigned char type)
 
         SPI_WriteComm(0x3A);
         SPI_WriteData(0x70);  //55/50=16bit(RGB565);66=18bit(RGB666);77或默认不写3AH是=24bit(RGB888)
+
+    }else if(type == 6){
+        //网络查询，https://blog.csdn.net/qq_37859760/article/details/118311157
+        SPI_WriteComm (0xFF);     
+        SPI_WriteData (0x77);   
+        SPI_WriteData (0x01);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x13);   
+        
+        SPI_WriteComm (0xEF);     
+        SPI_WriteData (0x08);   
+        
+        SPI_WriteComm (0xFF);     
+        SPI_WriteData (0x77);   
+        SPI_WriteData (0x01);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x10);   
+        
+        SPI_WriteComm (0xC0);     
+        SPI_WriteData (0xE5);   
+        SPI_WriteData (0x02);   
+        
+        SPI_WriteComm (0xC1);     
+        SPI_WriteData (0x0C);   
+        SPI_WriteData (0x0A);   
+        
+        SPI_WriteComm (0xC2);     
+        SPI_WriteData (0x07);   
+        SPI_WriteData (0x0F);   
+        
+        SPI_WriteComm (0xC3);     
+        SPI_WriteData (0x02);   
+        
+        SPI_WriteComm (0xCC);     
+        SPI_WriteData (0x10);   
+        
+        SPI_WriteComm (0xB0);     
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x08);   
+        SPI_WriteData (0x51);   
+        SPI_WriteData (0x0D);   
+        SPI_WriteData (0xCE);   
+        SPI_WriteData (0x06);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x08);   
+        SPI_WriteData (0x08);   
+        SPI_WriteData (0x1D);   
+        SPI_WriteData (0x02);   
+        SPI_WriteData (0xD0);   
+        SPI_WriteData (0x0F);   
+        SPI_WriteData (0x6F);   
+        SPI_WriteData (0x36);   
+        SPI_WriteData (0x3F);   
+        
+        SPI_WriteComm (0xB1);     
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x10);   
+        SPI_WriteData (0x4F);   
+        SPI_WriteData (0x0C);   
+        SPI_WriteData (0x11);   
+        SPI_WriteData (0x05);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x07);   
+        SPI_WriteData (0x07);   
+        SPI_WriteData (0x1F);   
+        SPI_WriteData (0x05);   
+        SPI_WriteData (0xD3);   
+        SPI_WriteData (0x11);   
+        SPI_WriteData (0x6E);   
+        SPI_WriteData (0x34);   
+        SPI_WriteData (0x3F);   
+        
+        SPI_WriteComm (0xFF);     
+        SPI_WriteData (0x77);   
+        SPI_WriteData (0x01);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x11);   
+        
+        SPI_WriteComm (0xB0);     
+        SPI_WriteData (0x4D);   
+        
+        SPI_WriteComm (0xB1);     
+        SPI_WriteData (0x1C);   
+        
+        SPI_WriteComm (0xB2);     
+        SPI_WriteData (0x87);   
+        
+        SPI_WriteComm (0xB3);     
+        SPI_WriteData (0x80);   
+        
+        SPI_WriteComm (0xB5);     
+        SPI_WriteData (0x47);   
+        
+        SPI_WriteComm (0xB7);     
+        SPI_WriteData (0x85);   
+        
+        SPI_WriteComm (0xB8);     
+        SPI_WriteData (0x21);   
+        
+        SPI_WriteComm (0xB9);     
+        SPI_WriteData (0x10);   
+        
+        SPI_WriteComm (0xC1);     
+        SPI_WriteData (0x78);   
+        
+        SPI_WriteComm (0xC2);     
+        SPI_WriteData (0x78);   
+        
+        SPI_WriteComm (0xD0);     
+        SPI_WriteData (0x88);   
+        
+        Delay(100);                
+        
+        SPI_WriteComm (0xE0);     
+        SPI_WriteData (0x80);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x02);   
+        
+        SPI_WriteComm (0xE1);     
+        SPI_WriteData (0x04);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x05);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x60);   
+        SPI_WriteData (0x60);   
+        
+        SPI_WriteComm (0xE2);     
+        SPI_WriteData (0x30);   
+        SPI_WriteData (0x30);   
+        SPI_WriteData (0x60);   
+        SPI_WriteData (0x60);   
+        SPI_WriteData (0x3C);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x3D);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        
+        SPI_WriteComm (0xE3);     
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x33);   
+        SPI_WriteData (0x33);   
+        
+        SPI_WriteComm (0xE4);     
+        SPI_WriteData (0x44);   
+        SPI_WriteData (0x44);   
+        
+        SPI_WriteComm (0xE5);     
+        SPI_WriteData (0x06);   
+        SPI_WriteData (0x3E);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0x08);   
+        SPI_WriteData (0x40);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0x0A);   
+        SPI_WriteData (0x42);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0x0C);   
+        SPI_WriteData (0x44);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0xA0);   
+        
+        SPI_WriteComm (0xE6);     
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x33);   
+        SPI_WriteData (0x33);   
+        
+        SPI_WriteComm (0xE7);     
+        SPI_WriteData (0x44);   
+        SPI_WriteData (0x44);   
+        
+        SPI_WriteComm (0xE8);     
+        SPI_WriteData (0x07);   
+        SPI_WriteData (0x3F);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0x09);   
+        SPI_WriteData (0x41);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0x0B);   
+        SPI_WriteData (0x43);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0x0D);   
+        SPI_WriteData (0x45);   
+        SPI_WriteData (0xA0);   
+        SPI_WriteData (0xA0);   
+        
+        SPI_WriteComm (0xEB);     
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x01);   
+        SPI_WriteData (0x4E);   
+        SPI_WriteData (0x4E);   
+        SPI_WriteData (0xEE);   
+        SPI_WriteData (0x44);   
+        SPI_WriteData (0x00);   
+        
+        SPI_WriteComm (0xED);     
+        SPI_WriteData (0xFF);   
+        SPI_WriteData (0xFF);   
+        SPI_WriteData (0x04);   
+        SPI_WriteData (0x56);   
+        SPI_WriteData (0x72);   
+        SPI_WriteData (0xFF);   
+        SPI_WriteData (0xFF);   
+        SPI_WriteData (0xFF);   
+        SPI_WriteData (0xFF);   
+        SPI_WriteData (0xFF);   
+        SPI_WriteData (0xFF);   
+        SPI_WriteData (0x27);   
+        SPI_WriteData (0x65);   
+        SPI_WriteData (0x40);   
+        SPI_WriteData (0xFF);   
+        SPI_WriteData (0xFF);   
+        
+        SPI_WriteComm (0xEF);     
+        SPI_WriteData (0x10);   
+        SPI_WriteData (0x0D);   
+        SPI_WriteData (0x04);   
+        SPI_WriteData (0x08);   
+        SPI_WriteData (0x3F);   
+        SPI_WriteData (0x1F);   
+        
+        SPI_WriteComm (0xFF);     
+        SPI_WriteData (0x77);   
+        SPI_WriteData (0x01);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x13);   
+        
+        SPI_WriteComm (0xE8);     
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x0E);   
+        
+        SPI_WriteComm (0xFF);     
+        SPI_WriteData (0x77);   
+        SPI_WriteData (0x01);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        
+        SPI_WriteComm (0x11);     
+        
+        Delay(120);                
+        
+        SPI_WriteComm (0xFF);     
+        SPI_WriteData (0x77);   
+        SPI_WriteData (0x01);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x13);   
+        
+        SPI_WriteComm (0xE8);     
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x0C);   
+        
+        Delay(10 );                
+        
+        SPI_WriteComm (0xE8);     
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        
+        SPI_WriteComm (0xFF);     
+        SPI_WriteData (0x77);   
+        SPI_WriteData (0x01);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        SPI_WriteData (0x00);   
+        
+        SPI_WriteComm (0x3A);     
+        SPI_WriteData (0x55);   
+        
+        SPI_WriteComm (0x36);     
+        SPI_WriteData (0x00);   
+        
+        SPI_WriteComm (0x35);     
+        SPI_WriteData (0x00);   
+        
+        SPI_WriteComm (0x29);     
     }
 }
 
 /**
  * @brief SPI写指令
- * @param alfredSt7701S 类实例指针
+ * @param VernonSt7701S 类实例指针
  * @param cmd 指令
 */
-void ST7701S_WriteCommand(Alfred_ST7701S *alfredSt7701S, uint8_t cmd)
+void ST7701S_WriteCommand(Vernon_ST7701S *VernonSt7701S, uint8_t cmd)
 {
     spi_transaction_t spi_tran = {
         .rxlength = 0,
@@ -1347,15 +1643,15 @@ void ST7701S_WriteCommand(Alfred_ST7701S *alfredSt7701S, uint8_t cmd)
         .cmd = 0,
         .addr = cmd,
     };
-    spi_device_transmit(alfredSt7701S->spi_device, &spi_tran);
+    spi_device_transmit(VernonSt7701S->spi_device, &spi_tran);
 }
 
 /**
  * @brief SPI写地址
- * @param alfredSt7701S 类实例指针
+ * @param VernonSt7701S 类实例指针
  * @param cmd 地址
 */
-void ST7701S_WriteData(Alfred_ST7701S *alfredSt7701S, uint8_t data)
+void ST7701S_WriteData(Vernon_ST7701S *VernonSt7701S, uint8_t data)
 {
     spi_transaction_t spi_tran = {
         .rxlength = 0,
@@ -1363,5 +1659,5 @@ void ST7701S_WriteData(Alfred_ST7701S *alfredSt7701S, uint8_t data)
         .cmd = 1,
         .addr = data,
     };
-    spi_device_transmit(alfredSt7701S->spi_device, &spi_tran);
+    spi_device_transmit(VernonSt7701S->spi_device, &spi_tran);
 }
