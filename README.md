@@ -52,6 +52,52 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 
 ![image-20230219180440612](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230219180440612.png)
 
+### 4. 解决颜色显示不纯的问题
+
+> 最明显的就是灰色不是纯灰色，偏黄色，而且字体是“虚”的
+
+原因是PCLK上跳沿下跳沿与数据时间不匹配问题。将
+
+```c
+.timings = {
+    .pclk_hz = EXAMPLE_LCD_PIXEL_CLOCK_HZ,
+    .h_res = EXAMPLE_LCD_H_RES,
+    .v_res = EXAMPLE_LCD_V_RES,
+    // The following parameters should refer to LCD spec
+    .hsync_back_porch = 40,
+    .hsync_front_porch = 20,
+    .hsync_pulse_width = 1,
+    .vsync_back_porch = 8,
+    .vsync_front_porch = 4,
+    .vsync_pulse_width = 1,
+    .flags.pclk_active_neg = true,
+}
+```
+
+改为
+
+```c
+.timings = {
+    .pclk_hz = EXAMPLE_LCD_PIXEL_CLOCK_HZ,
+    .h_res = EXAMPLE_LCD_H_RES,
+    .v_res = EXAMPLE_LCD_V_RES,
+    // The following parameters should refer to LCD spec
+    .hsync_back_porch = 40,
+    .hsync_front_porch = 20,
+    .hsync_pulse_width = 1,
+    .vsync_back_porch = 8,
+    .vsync_front_porch = 4,
+    .vsync_pulse_width = 1,
+    .flags.pclk_active_neg = false,
+},
+```
+
+即可。截图如下：
+
+![image-20230517163259824](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230517163259824.png)
+
+![image-20230517163249587](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230517163249587.png)
+
 ## 3. 如何移植
 
 修改`ST7701S_spi_init()`函数即可，即只修改初始化部分，初始化SPI使其可以发送1 + 8 = 9 bit的数据方式
