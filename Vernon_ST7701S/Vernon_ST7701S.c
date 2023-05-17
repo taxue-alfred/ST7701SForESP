@@ -4,34 +4,37 @@
 
 #include "Vernon_ST7701S.h"
 
-#define SPI_WriteComm(cmd) ST7701S_WriteCommand(VernonSt7701S, cmd)
-#define SPI_WriteData(data) ST7701S_WriteData(VernonSt7701S, data)
+#define SPI_WriteComm(cmd) ST7701S_WriteCommand(VernonSt7701S_handle, cmd)
+#define SPI_WriteData(data) ST7701S_WriteData(VernonSt7701S_handle, data)
 #define Delay(ms) vTaskDelay(ms / portTICK_PERIOD_MS)
 
+
 /**
- * @brief 三线SPI初始化
- * @param VernonSt7701S 类实例指针
+ * @brief 新建ST7701S对象
  * @param SDA SDA引脚
  * @param SCL SCL引脚
  * @param CS  CS引脚
  * @param spi_select SPI控制器, SPI3_HOST OR SPI4_HOST in ESP32S3
 */
-void ST7701S_spi_init(Vernon_ST7701S *VernonSt7701S, int SDA, int SCL, int CS, char spi_select)
+Vernon_ST7701S_handle ST7701S_newObject(int SDA, int SCL, int CS, char spi_select)
 {
-    VernonSt7701S->spi_io_config_t.miso_io_num = -1;
-    VernonSt7701S->spi_io_config_t.mosi_io_num = SDA;
-    VernonSt7701S->spi_io_config_t.sclk_io_num = SCL;
-    VernonSt7701S->spi_io_config_t.quadwp_io_num = -1;
-    VernonSt7701S->spi_io_config_t.quadhd_io_num = -1;
-    // 默认值，启用DMA应设置为0
-    VernonSt7701S->spi_io_config_t.max_transfer_sz = SOC_SPI_MAXIMUM_BUFFER_SIZE;
-    // 不使用DMA最后赋值0
-    ESP_ERROR_CHECK(spi_bus_initialize(spi_select, &VernonSt7701S->spi_io_config_t,
-                                       0));
+    // if you use `malloc()`, please set 0 in the area to be assigned.
+    Vernon_ST7701S_handle vernon_st7701s_handle = heap_caps_calloc(1, sizeof(Vernon_ST7701S), MALLOC_CAP_DEFAULT);
 
-    VernonSt7701S->st7701s_protocol_config_t.command_bits = 1;
-    VernonSt7701S->st7701s_protocol_config_t.address_bits = 8;
-    VernonSt7701S->st7701s_protocol_config_t.clock_speed_hz = 40000000;
+    vernon_st7701s_handle->spi_io_config_t.miso_io_num = -1;
+    vernon_st7701s_handle->spi_io_config_t.mosi_io_num = SDA;
+    vernon_st7701s_handle->spi_io_config_t.sclk_io_num = SCL;
+    vernon_st7701s_handle->spi_io_config_t.quadwp_io_num = -1;
+    vernon_st7701s_handle->spi_io_config_t.quadhd_io_num = -1;
+
+    // 默认值，启用DMA应设置为0
+    vernon_st7701s_handle->spi_io_config_t.max_transfer_sz = SOC_SPI_MAXIMUM_BUFFER_SIZE;
+    // 不使用DMA最后赋值0
+    ESP_ERROR_CHECK(spi_bus_initialize(spi_select, &(vernon_st7701s_handle->spi_io_config_t),
+                                       0));
+    vernon_st7701s_handle->st7701s_protocol_config_t.command_bits = 1;
+    vernon_st7701s_handle->st7701s_protocol_config_t.address_bits = 8;
+    vernon_st7701s_handle->st7701s_protocol_config_t.clock_speed_hz = 40000000;
     /**
      * < 时钟极性以及时钟相位设置(CPOL, CPHA):
          - 0: (0, 0)
@@ -39,20 +42,22 @@ void ST7701S_spi_init(Vernon_ST7701S *VernonSt7701S, int SDA, int SCL, int CS, c
          - 2: (1, 0)
          - 3: (1, 1)
          **/
-    VernonSt7701S->st7701s_protocol_config_t.mode = 0;
-    VernonSt7701S->st7701s_protocol_config_t.spics_io_num = CS;
-    VernonSt7701S->st7701s_protocol_config_t.queue_size = 1;
-    ESP_ERROR_CHECK(spi_bus_add_device(spi_select, &VernonSt7701S->st7701s_protocol_config_t,
-                                       &VernonSt7701S->spi_device));
+    vernon_st7701s_handle->st7701s_protocol_config_t.mode = 0;
+    vernon_st7701s_handle->st7701s_protocol_config_t.spics_io_num = CS;
+    vernon_st7701s_handle->st7701s_protocol_config_t.queue_size = 1;
+    ESP_ERROR_CHECK(spi_bus_add_device(spi_select, &(vernon_st7701s_handle->st7701s_protocol_config_t),
+                                       &(vernon_st7701s_handle->spi_device)));
+    
+    return vernon_st7701s_handle;
 }
 
 /**
  * @brief 屏幕初始化
- * @param VernonSt7701S 类实例指针
- * @param type 选择初始化类型 [1-x]
+ * @param VernonSt7701S_handle 类实例指针
+ * @param type 选择初始化类型 [1~x]
  * @note 以下类型来自不同地方，对应命令功能未知
 */
-void ST7701S_screen_init(Vernon_ST7701S *VernonSt7701S, unsigned char type)
+void ST7701S_screen_init(Vernon_ST7701S_handle VernonSt7701S_handle, unsigned char type)
 {
     if (type == 1){
         //从商家提供的资料复制
@@ -1889,11 +1894,21 @@ void ST7701S_screen_init(Vernon_ST7701S *VernonSt7701S, unsigned char type)
 }
 
 /**
+ * @brief 删除ST7701S对象
+ * @param VernonSt7701S_handle 类实例指针
+*/
+void ST7701S_delObject(Vernon_ST7701S_handle VernonSt7701S_handle)
+{
+    assert(VernonSt7701S_handle != NULL);
+    free(VernonSt7701S_handle);
+}
+
+/**
  * @brief SPI写指令
- * @param VernonSt7701S 类实例指针
+ * @param VernonSt7701S_handle 类实例指针
  * @param cmd 指令
 */
-void ST7701S_WriteCommand(Vernon_ST7701S *VernonSt7701S, uint8_t cmd)
+void ST7701S_WriteCommand(Vernon_ST7701S_handle VernonSt7701S_handle, uint8_t cmd)
 {
     spi_transaction_t spi_tran = {
         .rxlength = 0,
@@ -1901,15 +1916,15 @@ void ST7701S_WriteCommand(Vernon_ST7701S *VernonSt7701S, uint8_t cmd)
         .cmd = 0,
         .addr = cmd,
     };
-    spi_device_transmit(VernonSt7701S->spi_device, &spi_tran);
+    spi_device_transmit(VernonSt7701S_handle->spi_device, &spi_tran);
 }
 
 /**
  * @brief SPI写地址
- * @param VernonSt7701S 类实例指针
+ * @param VernonSt7701S_handle 类实例指针
  * @param cmd 地址
 */
-void ST7701S_WriteData(Vernon_ST7701S *VernonSt7701S, uint8_t data)
+void ST7701S_WriteData(Vernon_ST7701S_handle VernonSt7701S_handle, uint8_t data)
 {
     spi_transaction_t spi_tran = {
         .rxlength = 0,
@@ -1917,5 +1932,5 @@ void ST7701S_WriteData(Vernon_ST7701S *VernonSt7701S, uint8_t data)
         .cmd = 1,
         .addr = data,
     };
-    spi_device_transmit(VernonSt7701S->spi_device, &spi_tran);
+    spi_device_transmit(VernonSt7701S_handle->spi_device, &spi_tran);
 }

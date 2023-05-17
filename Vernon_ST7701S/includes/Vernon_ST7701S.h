@@ -16,16 +16,27 @@ typedef struct{
     spi_device_interface_config_t st7701s_protocol_config_t;
 }Vernon_ST7701S;
 
-//三线SPI初始化，9Bit
-void ST7701S_spi_init(Vernon_ST7701S * VernonSt7701S, int SDA, int SCL, int CS, char spi_select);
+typedef Vernon_ST7701S * Vernon_ST7701S_handle;
+
+
+/*Public Function*/
+
+//创建新的对象
+Vernon_ST7701S_handle ST7701S_newObject(int SDA, int SCL, int CS, char spi_select);
 
 //屏幕初始化
-void ST7701S_screen_init(Vernon_ST7701S *VernonSt7701S, unsigned char type);
+void ST7701S_screen_init(Vernon_ST7701S_handle VernonSt7701S_handle, unsigned char type);
+
+//删除对象
+void ST7701S_delObject(Vernon_ST7701S_handle VernonSt7701S_handle);
+
+
+/*Private Function*/
 
 //SPI写指令
-void ST7701S_WriteCommand(Vernon_ST7701S * VernonSt7701S, uint8_t cmd);
+void ST7701S_WriteCommand(Vernon_ST7701S_handle VernonSt7701S_handle, uint8_t cmd);
 
 //SPI写地址
-void ST7701S_WriteData(Vernon_ST7701S * VernonSt7701S, uint8_t data);
+void ST7701S_WriteData(Vernon_ST7701S_handle VernonSt7701S_handle, uint8_t data);
 
 #endif //RGB_PANEL_Vernon_ST7701S_H
