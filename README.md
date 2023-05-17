@@ -34,7 +34,7 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 
 > 如果在编译过程中未出现此类报错，可以直接跳过
 
-![image-20230122220934556](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230122220934556.png)
+<img src="https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230122220934556.png" alt="image-20230122220934556" style="zoom: 33%;" />
 
 此处进行强制类型转换即可，修改之后编译通过即可。
 
@@ -45,7 +45,7 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 ### 3. menuconfig配置PSRAM
 
 配置如下
-![image-20230122223142648](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230122223142648.png)
+<img src="https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230122223142648.png" alt="image-20230122223142648" style="zoom: 33%;" />
 
 **这一步特别重要，不然会出现屏幕疯狂滚动的现象**
 
@@ -53,7 +53,7 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 
 开启 `Cache fetch instruction from SPI RAM`和`Cache load read only data from SPI RAM`
 
-![image-20230219180440612](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230219180440612.png)
+<img src="https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230219180440612.png" alt="image-20230219180440612" style="zoom: 67%;" />
 
 ### 4. 解决颜色显示不纯的问题
 
@@ -97,9 +97,9 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 
 即可。截图如下：
 
-![image-20230517163259824](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230517163259824.png)
+<img src="https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230517163259824.png" alt="image-20230517163259824" style="zoom:50%;" />
 
-![image-20230517163249587](https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230517163249587.png)
+<img src="https://taxue-alfred-1253400076.cos.ap-beijing.myqcloud.com/image-20230517163249587.png" alt="image-20230517163249587" style="zoom:50%;" />
 
 ## 3. 如何移植
 
