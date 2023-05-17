@@ -1,11 +1,11 @@
 # ST7701SForESP
 ST7701S ESP系列驱动，基于ESP-IDF5.0，ESP32S3编写。
 
-本库只负责SPI的配置，SPI设置屏幕两方面。由于RGB库和图形库的配置无法解耦，具体使用的RGB库，图形库需要自行配置添加，**本示例默认绑定LVGL**
+本库只负责SPI的配置，SPI设置屏幕信息两方面。由于RGB库和图形库的配置无法解耦，具体使用的图形库需要自行配置添加，**本示例默认绑定LVGL，使用IDF5示例`rgb_panel`**进行测试
 
-SPI的指令，地址配置信息来源较多，其中有从Arduino_GFX库中移植。
+SPI的指令，地址配置信息来源较多，其中有从Arduino_GFX库中移植，在此感谢陈亮大佬。
 
-本库使用面向对象思想编程，支持多设备多实例，但不建议
+本库使用面向对象思想编程，支持多设备多实例，但不建议。
 
 Github，Gitee同步更新，Gitee仅作为下载仓库，提交Issue和Pull request请到Github
 
@@ -16,11 +16,14 @@ Github，Gitee同步更新，Gitee仅作为下载仓库，提交Issue和Pull req
 ## 1. 目录结构
 
 ```
-- components
-	- Alfred_ST7701S 驱动文件
-	- lvgl LVGL库文件
-- main
-	- ST7701SForESP.c 示例文件
+├─examples
+│      ST7701SForESP_example.c //rgb_panel主函数示例(需要克隆rgb_panel)
+│
+└─Vernon_ST7701S
+    │  Vernon_ST7701S.c
+    │
+    └─includes
+            Vernon_ST7701S.h
 ```
 
 ## 2. 使用方法
@@ -54,7 +57,7 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 
 ### 4. 解决颜色显示不纯的问题
 
-> 最明显的就是灰色不是纯灰色，偏黄色，而且字体是“虚”的
+**最明显的就是灰色不是纯灰色，偏黄色，而且字体是“虚”的**
 
 原因是PCLK上跳沿下跳沿与数据时间不匹配问题。将
 
