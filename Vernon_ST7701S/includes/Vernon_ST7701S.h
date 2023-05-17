@@ -9,11 +9,19 @@
 #include "driver/gpio.h"
 #include "freertos/task.h"
 
+#define SPI_METHOD 1
+#define IOEXPANDER_METHOD 0
+
 //类结构体
 typedef struct{
+    char method_select;
+    
+    //SPI config_t
     spi_device_handle_t spi_device;
     spi_bus_config_t spi_io_config_t;
     spi_device_interface_config_t st7701s_protocol_config_t;
+
+    //I2C config_t
 }Vernon_ST7701S;
 
 typedef Vernon_ST7701S * Vernon_ST7701S_handle;
@@ -22,7 +30,7 @@ typedef Vernon_ST7701S * Vernon_ST7701S_handle;
 /*Public Function*/
 
 //创建新的对象
-Vernon_ST7701S_handle ST7701S_newObject(int SDA, int SCL, int CS, char spi_select);
+Vernon_ST7701S_handle ST7701S_newObject(int SDA, int SCL, int CS, char channel_select, char method_select);
 
 //屏幕初始化
 void ST7701S_screen_init(Vernon_ST7701S_handle VernonSt7701S_handle, unsigned char type);

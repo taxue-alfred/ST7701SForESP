@@ -5,7 +5,7 @@ ST7701S ESP系列驱动，基于ESP-IDF5.0，ESP32S3编写。
 
 SPI的指令，地址配置信息来源较多，其中有从Arduino_GFX库中移植，在此感谢陈亮大佬。
 
-本库使用面向对象思想编程，支持多设备多实例，但不建议。
+本库支持SPI配置和IO拓展IC配置屏幕，使用面向对象思想编程，支持多设备多实例，但不建议。
 
 Github，Gitee同步更新，Gitee仅作为下载仓库，提交Issue和Pull request请到Github
 
@@ -40,7 +40,31 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 
 ### 2. 嵌入项目
 
-直接将components中的Alfred_ST7701S放入自己的components中，后执行`idf.py reconfigure`重构CMake，主函数中调用函数即可
+#### 2.1 克隆项目
+
+```bash
+//以下方式二选一即可
+git clone https://gitee.com/TaXue_TianXing/ST7701SForESP.git //直接克隆
+git submodule add https://gitee.com/TaXue_TianXing/ST7701SForESP.git //作为模块克隆
+```
+
+#### 2.2 调用示例
+
+```C
+Vernon_ST7701S_handle vernon_st7701s = ST7701S_newObject(SPI_SDA, SPI_SCL, SPI_CS, SPI3_HOST, SPI_METHOD);
+ST7701S_screen_init(vernon_st7701s, 2); //后方数字表示使用的配置下标
+ST7701S_delObject(vernon_st7701s);
+```
+
+#### 2.3 加入Cmake
+
+如果在components文件夹下作为模组使用，那么只需要命令行中
+
+```bash
+idf.py reconfigure
+```
+
+如果在其他文件夹下，那么需要设置CmkaeLists.txt加入编译列表，之后再执行上面的命令。
 
 ### 3. menuconfig配置PSRAM
 
@@ -103,7 +127,7 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 
 ## 3. 如何移植
 
-修改`ST7701S_spi_init()`函数即可，即只修改初始化部分，初始化SPI使其可以发送1 + 8 = 9 bit的数据方式
+修改`ST7701S_newObject`函数即可，即只修改初始化部分以及动态分配函数部分，**应该注意，再分配之后，应当为分配的内存区域全部置0**。之后初始化SPI使其可以发送1 + 8 = 9 bit的数据方式
 
 ## 4. 参考库
 
