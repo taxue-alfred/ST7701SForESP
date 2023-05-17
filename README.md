@@ -43,7 +43,7 @@ format %lu expects argument of type 'long unsigned int' but argument 3 has type 
 #### 2.1 克隆项目
 
 ```bash
-//以下方式二选一即可
+//以下方式二选一即可，链接Github无法访问自行更换Gitee
 git clone https://gitee.com/TaXue_TianXing/ST7701SForESP.git //直接克隆
 git submodule add https://gitee.com/TaXue_TianXing/ST7701SForESP.git //作为模块克隆
 ```
@@ -86,37 +86,13 @@ idf.py reconfigure
 原因是PCLK上跳沿下跳沿与数据时间不匹配问题。将
 
 ```c
-.timings = {
-    .pclk_hz = EXAMPLE_LCD_PIXEL_CLOCK_HZ,
-    .h_res = EXAMPLE_LCD_H_RES,
-    .v_res = EXAMPLE_LCD_V_RES,
-    // The following parameters should refer to LCD spec
-    .hsync_back_porch = 40,
-    .hsync_front_porch = 20,
-    .hsync_pulse_width = 1,
-    .vsync_back_porch = 8,
-    .vsync_front_porch = 4,
-    .vsync_pulse_width = 1,
-    .flags.pclk_active_neg = true,
-}
+.flags.pclk_active_neg = true
 ```
 
 改为
 
 ```c
-.timings = {
-    .pclk_hz = EXAMPLE_LCD_PIXEL_CLOCK_HZ,
-    .h_res = EXAMPLE_LCD_H_RES,
-    .v_res = EXAMPLE_LCD_V_RES,
-    // The following parameters should refer to LCD spec
-    .hsync_back_porch = 40,
-    .hsync_front_porch = 20,
-    .hsync_pulse_width = 1,
-    .vsync_back_porch = 8,
-    .vsync_front_porch = 4,
-    .vsync_pulse_width = 1,
-    .flags.pclk_active_neg = false,
-},
+.flags.pclk_active_neg = false
 ```
 
 即可。截图如下：
