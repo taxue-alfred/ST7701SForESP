@@ -62,12 +62,11 @@ static const char *TAG = "example";
 
 #define EXAMPLE_LVGL_TICK_PERIOD_MS    2
 
+
 //Custom Var
 #define SPI_SDA 20
 #define SPI_SCL 19
 #define SPI_CS  4
-
-Vernon_ST7701S vernon_st7701s;
 
 
 // we use two semaphores to sync the VSYNC event and the LVGL task, to avoid potential tearing effect
@@ -113,8 +112,8 @@ static void example_increase_lvgl_tick(void *arg)
 
 void app_main(void)
 {
-    ST7701S_spi_init(&vernon_st7701s, SPI_SDA, SPI_SCL, SPI_CS, SPI3_HOST);
-    ST7701S_screen_init(&vernon_st7701s, 7);
+    Vernon_ST7701S_handle vernon_st7701s = ST7701S_newObject(SPI_SDA, SPI_SCL, SPI_CS, SPI3_HOST, SPI_METHOD);
+    ST7701S_screen_init(vernon_st7701s, 2);
 
     static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) called draw buffer(s)
     static lv_disp_drv_t disp_drv;      // contains callback functions
